@@ -47,10 +47,11 @@ class Carrito {
 }
 
 //Objetos de los productos para comprar
-productos.push(new Producto("01", "Impresora 3D", "Hellbot", 47000, 0));
+productos.push(new Producto("01", "Impresora 3D", "Hellbot", 47000, 1));
 productos.push(new Producto("02", "PlayStation 5", "Sony", 150000, 10));
 productos.push(new Producto("03", "GTX 1660 Super", "Nvidia", 90000, 50));
 productos.push(new Producto("04", "Camara DSRL D3500", "Nikon", 45000, 15));
+
 
 //FUNCIONES
 //MENU
@@ -59,7 +60,7 @@ const menu = () => {
         opcion = parseInt(prompt ("Bienvenido al mundo de Maxi\n En esta pagina solo se venden los objetos con los que me encapricho\n Elija una opcion:\n 1-Ver listado de productos\n 2-Agregar productos al carrito\n 3-Eliminar productos del carrito\n 4-Comprar\n5- Salir"));
         switch (opcion){
             case 1:
-                mostrarLista ();
+                mostrarLista();
                 break;
             case 2:
                 comprobarId();
@@ -83,6 +84,7 @@ const menu = () => {
 //Funcion que muestra la lista de items en venta.
 function mostrarLista () {
     const listaItems = productos.map((el) => "\nID: " + el.id + "\nProducto: " + el.nombre + "\nMarca: " + el.marca + "\nPrecio: " + el.precio + " $" + "\nStock: " + el.stock + "\n");
+    console.log(listaItems);
     alert("Estos son los productos que podra encontrar el dia de hoy en el mundo de Maxi:\n" + listaItems);
 }
 
@@ -159,13 +161,17 @@ function quitarCarrito(){
 }
 
 function comprar (){
-    const confirmacionCompra = carrito.map((el)=> "Usted esta llevando: \n" + el.cantidad + " unidades de " + el.producto + " por un subtotal de: " + (el.subtotal= el.precio*el.cantidad) + " $" + "(Precio Unitario: " + el.precio + " $)\n");
-    let total = carrito.reduce((acc,el)=>acc + el.subtotal,0);
-    finalizacionCompra = confirm(confirmacionCompra + "\n El total es: " + total + " $ \nUsted desea concluir con la compra?");
-    if(finalizacionCompra){
-        alert('Su compra se ha realizado con exito!!!');
-    } else {
-        menu();
+    if(carrito.length>0){
+        const confirmacionCompra = carrito.map((el)=> "Usted esta llevando: \n" + el.cantidad + " unidades de " + el.producto + " por un subtotal de: " + (el.subtotal= el.precio*el.cantidad) + " $" + "(Precio Unitario: " + el.precio + " $)\n");
+        let total = carrito.reduce((acc,el)=>acc + el.subtotal,0);
+        finalizacionCompra = confirm(confirmacionCompra + "\n El total es: " + total + " $ \nUsted desea concluir con la compra?");
+        if(finalizacionCompra){
+            alert('Su compra se ha realizado con exito!!!');
+        } else {
+            menu();
+        }
+    }else{
+        alert("Usted no tiene productos en su carrito");
     }
 }
 
