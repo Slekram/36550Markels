@@ -1,9 +1,12 @@
-//Ver productos
-//Agregar al carrito
-//Modificar el carrito
-//Comprar
-//Salir
+//El mundo de maxi (e-commerce)
+//Permite:
+    //Ver productos
+    //Agregar al carrito
+    //Modificar el carrito
+    //Comprar
+    //Salir
 
+import {productos} from "./productos";
 
 //Variables globales
 let opcion;
@@ -15,22 +18,9 @@ let indexStock;
 let indexStockRecuperado;
 let cantidadItems;
 let finalizacionCompra;
-let validacionCantidad;
 
 //Arrays
-const productos = [];
 const carrito = [];
-
-//Constructores de objetos
-class Producto {
-    constructor(id, nombre, marca, precio, stock) {
-        this.id = id;
-        this.nombre = nombre;
-        this.marca = marca;
-        this.precio = precio;
-        this.stock = stock;
-    }
-}
 
 class Carrito {
     constructor (id, producto, precio){
@@ -45,13 +35,6 @@ class Carrito {
     }
 
 }
-
-//Objetos de los productos para comprar
-productos.push(new Producto("01", "Impresora 3D", "Hellbot", 47000, 1));
-productos.push(new Producto("02", "PlayStation 5", "Sony", 150000, 10));
-productos.push(new Producto("03", "GTX 1660 Super", "Nvidia", 90000, 50));
-productos.push(new Producto("04", "Camara DSRL D3500", "Nikon", 45000, 15));
-
 
 //FUNCIONES
 //MENU
@@ -81,7 +64,10 @@ const menu = () => {
     } while (opcion !== 5);
 }
 
+
 //Funcion que muestra la lista de items en venta.
+
+
 function mostrarLista () {
     const listaItems = productos.map((el) => "\nID: " + el.id + "\nProducto: " + el.nombre + "\nMarca: " + el.marca + "\nPrecio: " + el.precio + " $" + "\nStock: " + el.stock + "\n");
     console.log(listaItems);
@@ -176,5 +162,7 @@ function comprar (){
 }
 
 menu ();
+
+//para ver que valores finales toma el array de productos y el carrito.
 console.log(productos);
 console.log(carrito);
