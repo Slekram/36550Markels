@@ -25,9 +25,6 @@ const carritoIndex = (productoId) => {
     const renderCarrito = () => {
 
         let producto = productos.find(producto => producto.id == productoId);
-        let productoCarrito = carrito.find(productoComparado => productoComparado.id == producto.id);
-        
-        console.log(productoCarrito);
         carrito.push(producto);
         
         producto.stock = 1
