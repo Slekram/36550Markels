@@ -25,13 +25,16 @@ const carritoIndex = (productoId) => {
     const renderCarrito = () => {
 
         let producto = productos.find(producto => producto.id == productoId);
+        let productoCarrito = carrito.find(productoComparado => productoComparado.id == producto.id);
+        
+        console.log(productoCarrito);
         carrito.push(producto);
         
-        let div = document.createElement("div");
-        div.innerHTML = `<p>Producto: ${producto.nombre}</p>
+        producto.stock = 1
+
+        modalCarrito.innerHTML += `<p>Producto: ${producto.nombre}</p>
                         <p>Precio: ${producto.precio} $</p>
                         <p id="producto${producto.id}">Cantidad: ${producto.stock}</p>`;
-        modalCarrito.appendChild(div);
 
     }
 
