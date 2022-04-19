@@ -2,12 +2,12 @@ import { productos } from "./app.js";
 
 const carrito = [];
 
-class objetoCarrito { 
+class ObjetoCarrito { 
     constructor (obj){
         this.id = obj.id;
         this.producto = obj.nombre;
         this.precio = obj.precio;
-        this.cantidad = 1
+        this.cantidad = 1;
     }
 }
 
@@ -16,11 +16,12 @@ export const carritoIndex = (productoId) => {
 
     const renderCarrito = () => {
 
-        let productoCarrito = carrito.findIndex(producto => producto.id == productoId)
-        console.log(productoCarrito);
-        if (productoCarrito == -1){
+        const indexCarrito = carrito.findIndex(producto => producto.id == productoId);
+        console.log(indexCarrito);
+        if (indexCarrito < 0){
             let producto = productos.find(producto => producto.id == productoId);
-            carrito.push(new objetoCarrito (producto));
+            console.log(producto);
+            carrito.push(new ObjetoCarrito (producto));
             console.log(carrito);
             carrito.forEach(producto => {
                 modalCarrito.innerHTML += `<p>Producto: ${producto.producto}</p>
@@ -28,11 +29,11 @@ export const carritoIndex = (productoId) => {
                             <p id="producto${producto.id}">Cantidad: ${producto.cantidad}</p>`;
             });
         }else{
-            carrito[productoCarrito].cantidad = carrito[productoCarrito].cantidad + 1;
+            carrito[indexCarrito].cantidad = carrito[indexCarrito].cantidad + 1;
             console.log(carrito);
-            const contadorCarrito = document.getElementById(`producto${carrito[productoCarrito].id}`);
+            const contadorCarrito = document.getElementById(`producto${carrito[indexCarrito].id}`);
             console.log(contadorCarrito);
-            contadorCarrito.innerText = `Cantidad: ${carrito[productoCarrito].cantidad}`
+            contadorCarrito.innerText = `Cantidad: ${carrito[indexCarrito].cantidad}`;
         }
 
     }
