@@ -18,12 +18,14 @@ productos.push(new Producto(2, "PlayStation 5", "Sony", 150000, 10, "./src/image
 productos.push(new Producto(3, "GTX 1660 Super", "Nvidia", 90000, 50, "./src/images/1660.webp"));
 productos.push(new Producto(4, "Camara DSRL D3500", "Nikon", 45000, 15, "./src/images/3500.webp"));
 
-const guardarStorage = (key, valor) =>{
-    localStorage.setItem(key, valor)
-};
+export {productos};
 
-for (const producto of productos) {
-    guardarStorage(`Producto: ${producto.id}`, JSON.stringify(producto))
-};
+// const guardarStorage = (key, valor) =>{
+//     localStorage.setItem(key, valor)
+// };
+
+// for (const producto of productos) {
+//     guardarStorage(`Producto${producto.id}`, JSON.stringify(producto))
+// };
 
 
