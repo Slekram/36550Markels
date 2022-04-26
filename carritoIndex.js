@@ -1,4 +1,4 @@
-import { productos } from "./app.js";
+import { productos } from "./productos.js";
 
 const carrito = [];
 
@@ -27,11 +27,29 @@ export const carritoIndex = (productoId) => {
             console.log(carrito);
             let indexCarrito2 = carrito.length - 1;
             console.log(indexCarrito2);
-            modalCarrito.innerHTML += `<p>Producto: ${carrito[indexCarrito2].producto}</p>
+            const divCarrito = document.createElement('div');
+            divCarrito.innerHTML += `<p>Producto: ${carrito[indexCarrito2].producto}</p>
                                         <p>Precio unitario: ${carrito[indexCarrito2].precio} $</p>
-                                        <p id="producto${carrito[indexCarrito2].id}">Cantidad: ${carrito[indexCarrito2].cantidad}</p>
-                                        <p id="total${carrito[indexCarrito2].id}">Subtotal: ${carrito[indexCarrito2].total} </p>`;
-            
+                                        <div class="d-flex">
+                                            <p id="producto${carrito[indexCarrito2].id}">
+                                                Cantidad: ${carrito[indexCarrito2].cantidad}
+                                            </p>
+                                            <div class="botonera-carrito">
+                                                <button type="button" class="btn btn-success" id="restar${carrito[indexCarrito2].id}">
+                                                    <img src="./src/images/cart-dash.svg" alt="restar-carrito">
+                                                </button>
+                                                <button type="button" class="btn btn-success" id="sumar${carrito[indexCarrito2].id}">
+                                                    <img src="./src/images/cart-plus.svg" alt="sumar-carrito">
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="eliminar${carrito[indexCarrito2].id}">
+                                                    <img src="./src/images/trash.svg" alt="papelera">
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <p id="total${carrito[indexCarrito2].id}">Subtotal: ${carrito[indexCarrito2].total} </p>
+                                        <hr>`;
+            modalCarrito.appendChild(divCarrito);
         }else{
             carrito[indexCarrito].cantidad = carrito[indexCarrito].cantidad + 1;
             console.log(carrito);

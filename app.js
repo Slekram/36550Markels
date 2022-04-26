@@ -1,16 +1,16 @@
+import { productos } from "./productos.js";
 import { carritoIndex } from "./carritoIndex.js";
 
-const productos = [];
+console.log(productos);
 
+//const productos = [];
 
-for (let index = 0; index < localStorage.length; index++) {
-    const productosAlmacenados = JSON.parse(localStorage.getItem(localStorage.key(index)));
-    productos.push(productosAlmacenados);
-}
+// for (let index = 0; index < localStorage.length; index++) {
+//     const productosAlmacenados = JSON.parse(localStorage.getItem(localStorage.key(index)));
+//     productos.push(productosAlmacenados);
+// }
 
 //console.log(productos);
-
-export {productos};
 
 const restarStock = (restaId) => {
     let productoRestado = productos.findIndex(producto => producto.id == restaId);
