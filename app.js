@@ -51,10 +51,11 @@ const mostrarProductos = (productos) => {
             containerProductos.appendChild(div);
 
             const boton = document.getElementById(`boton${producto.id}`);
-
+            console.log(boton);
             boton.addEventListener("click", ()=>{
                 restarStock(producto.id);
                 carritoIndex(producto.id);
+                console.log(boton);
             })
         }
     });
