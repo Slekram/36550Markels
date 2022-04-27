@@ -115,7 +115,6 @@ const renderCarrito = (productoId) => {
             })
         }
     });
-        
     })
 }
 

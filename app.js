@@ -61,7 +61,7 @@ const mostrarProductos = (productos) => {
                     icon: 'success',
                     showConfirmButton: false,
                     timer: 1500,
-                   })
+                })
 
             })
         }
