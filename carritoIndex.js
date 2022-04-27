@@ -35,7 +35,13 @@ export const carritoIndex = (productoId) => {
 
 const btnComprar = document.getElementById("btnComprar");
 btnComprar.addEventListener("click", () => {
-    swal("Compra realizada con exito");
+    Swal.fire({
+        title: 'Exito!',
+        text: 'Usted realizo la compra con exito',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 4000,
+       })
 } )
 
 const actualizarCarrito = () => {
@@ -89,7 +95,27 @@ const renderCarrito = (productoId) => {
     modalCarrito.appendChild(divCarrito);
     let btnEliminar = document.getElementById(`eliminar${productoId}`);
     btnEliminar.addEventListener("click", () =>{
-        btnEliminar.parentElement.parentElement.parentElement.remove();
+    Swal.fire({
+        title: "Cuidado",
+        text: "¿Eliminar producto por completo?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+    })
+    .then(resultado => {
+        if (resultado.value) {
+            btnEliminar.parentElement.parentElement.parentElement.remove();
+            Swal.fire({
+                title: 'Exito!',
+                text: 'Usted elimino el producto del carrito',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+    });
+        
     })
 }
 

@@ -55,7 +55,14 @@ const mostrarProductos = (productos) => {
             boton.addEventListener("click", ()=>{
                 restarStock(producto.id);
                 carritoIndex(producto.id);
-                console.log(boton);
+                Swal.fire({
+                    title: 'Exito!',
+                    text: 'Usted agrega un producto al carrito con exito',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                   })
+
             })
         }
     });
