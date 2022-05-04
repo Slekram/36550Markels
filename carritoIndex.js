@@ -1,6 +1,6 @@
 import { eliminarCarrito } from "./botoneraCarrito.js";
-import { productos } from "./productos.js";
-
+//import { productos } from "./productos.js";
+import { productos } from "./app.js";
 const carrito = [];
 let btnEliminar;
 class ObjetoCarrito {
@@ -11,7 +11,6 @@ class ObjetoCarrito {
         this.cantidad = 1;
         this.total = this.precio * this.cantidad;
     }
-
 }
 
 export const carritoIndex = (productoId) => {
