@@ -1,0 +1,35 @@
+[
+    {
+        "id":1,
+        "nombre": "Impresora 3D",
+        "marca": "Hellbot",
+        "precio": 47000,
+        "stock": 2,
+        "img": "./src/images/impresora-3d.webp"
+    },
+    {
+        "id":2,
+        "nombre": "PlayStation 5",
+        "marca": "Sony",
+        "precio": 150000,
+        "stock": 10,
+        "img": "./src/images/play.webp"
+    },
+    {
+        "id":3,
+        "nombre": "GTX 1660 Super",
+        "marca": "Nvidia",
+        "precio": 90000,
+        "stock": 50,
+        "img": "./src/images/1660.webp"
+    },
+    {
+        "id":4,
+        "nombre": "Camara DSRL D3500",
+        "marca": "Nikon",
+        "precio": 45000,
+        "stock": 15,
+        "img": "./src/images/3500.webp"
+    }
+]
+

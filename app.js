@@ -1,7 +1,8 @@
-import { productos } from "./productos.js";
-import { carritoIndex } from "./carritoIndex.js";
+//import { productos } from "./productos.js";
+import {carritoIndex } from "./carritoIndex.js";
+import {getData} from "./getData.js";
 
-console.log(productos);
+export const productos = await getData();
 
 //const productos = [];
 
@@ -10,7 +11,7 @@ console.log(productos);
 //     productos.push(productosAlmacenados);
 // }
 
-//console.log(productos);
+
 
 const restarStock = (restaId) => {
     let productoRestado = productos.findIndex(producto => producto.id == restaId);
@@ -27,8 +28,9 @@ const restarStock = (restaId) => {
     }
 }
 
-const mostrarProductos = (productos) => {
+const mostrarProductos = async () => {
     const containerProductos = document.getElementById("container-productos");
+    console.log(productos);
     productos.forEach(producto => {
         const div = document.createElement('div');
         if (producto.stock > 0){
@@ -68,4 +70,4 @@ const mostrarProductos = (productos) => {
     });
 }
 
-mostrarProductos(productos);
+mostrarProductos();
