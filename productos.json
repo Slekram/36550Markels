@@ -4,7 +4,7 @@
         "nombre": "Impresora 3D",
         "marca": "Hellbot",
         "precio": 47000,
-        "stock": 2,
+        "stock": 3,
         "img": "./src/images/impresora-3d.webp"
     },
     {
