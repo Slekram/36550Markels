@@ -1,8 +1,9 @@
-import { eliminarCarrito } from "./botoneraCarrito.js";
+//import { eliminarCarrito } from "./botoneraCarrito.js";
 //import { productos } from "./productos.js";
 import { productos } from "./app.js";
-const carrito = [];
-let btnEliminar;
+
+let carrito = [];
+
 class ObjetoCarrito {
     constructor (obj){
         this.id = obj.id;
@@ -16,8 +17,12 @@ class ObjetoCarrito {
 export const carritoIndex = (productoId) => {
     const modalCarrito = document.getElementById("modalCarrito");
 
-    const comprobacionCarrito = () => {
+    if (localStorage.getItem("carrito")){
+        carrito = JSON.parse(localStorage.getItem("carrito"));
+        console.log(carrito);
+    }
 
+    const comprobacionCarrito = () => {
         const indexCarrito = carrito.findIndex(producto => producto.id == productoId);
         console.log(indexCarrito);
         if (indexCarrito < 0){
@@ -28,7 +33,6 @@ export const carritoIndex = (productoId) => {
         //eliminarCarrito(productoId);
         actualizarCarrito();
     }
-    
     comprobacionCarrito();
 }
 
@@ -40,7 +44,7 @@ btnComprar.addEventListener("click", () => {
         icon: 'success',
         showConfirmButton: false,
         timer: 4000,
-       })
+    })
 } )
 
 const actualizarCarrito = () => {
@@ -48,6 +52,7 @@ const actualizarCarrito = () => {
     let sumaTotal = carrito.reduce ((acc, el) => acc + el.total, 0);
     console.log(sumaTotal);
     totalCompra.innerHTML = "Total: " + sumaTotal;
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
 const sumarCarrito = (productoId, indexCarrito) => {
@@ -92,31 +97,68 @@ const renderCarrito = (productoId) => {
                                         <p id="total${carrito[indexCarrito2].id}">Subtotal: ${carrito[indexCarrito2].total} </p>
                                         <hr>`;
     modalCarrito.appendChild(divCarrito);
-    let btnEliminar = document.getElementById(`eliminar${productoId}`);
-    btnEliminar.addEventListener("click", () =>{
-    Swal.fire({
-        title: "Cuidado",
-        text: "¿Eliminar producto por completo?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: "Eliminar",
-        cancelButtonText: "Cancelar",
+
+    let btnRestar = document.getElementById(`restar${productoId}`);
+    btnRestar.addEventListener("click", ()=>{
+        let indexRestar = carrito.findIndex((productoRestar) => productoRestar.id === productoId);
+        carrito[indexRestar].cantidad -= 1;
+        let cantidadRender = document.getElementById(`producto${productoId}`);
+        cantidadRender.innerText = "Cantidad: " + carrito[indexRestar].cantidad;
+        let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
+        productos[indexRecuperarStock].stock += 1;
+        let stockRender = document.getElementById(`stock${productoId}`);
+        stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
+        localStorage.setItem("productos", JSON.stringify(productos));
+        localStorage.setItem("carrito", JSON.stringify(carrito));
     })
-    .then(resultado => {
-        if (resultado.value) {
-            btnEliminar.parentElement.parentElement.parentElement.remove();
-            Swal.fire({
-                title: 'Exito!',
-                text: 'Usted elimino el producto del carrito',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-            })
-        }
+
+    let btnEliminar = document.getElementById(`eliminar${productoId}`);
+    btnEliminar.addEventListener("click", ()=>{
+        Swal.fire({
+            title: "Cuidado",
+            text: "¿Eliminar producto por completo?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Eliminar",
+            cancelButtonText: "Cancelar",
+        })
+        .then(resultado => {
+            if (resultado.value) {
+                btnEliminar.parentElement.parentElement.parentElement.remove();
+                let indexEliminar = carrito.findIndex((productoEliminar) => productoEliminar.id === productoId);
+                let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
+                let recuperadorStock = carrito[indexEliminar].cantidad;
+                productos[indexRecuperarStock].stock = productos[indexRecuperarStock].stock + recuperadorStock;
+                carrito.splice(indexEliminar,1);
+                let stockRender = document.getElementById(`stock${productoId}`);
+                stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
+                localStorage.setItem("productos", JSON.stringify(productos));
+                localStorage.setItem("carrito", JSON.stringify(carrito));
+                Swal.fire({
+                    title: 'Exito!',
+                    text: 'Usted elimino el producto del carrito',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                })
+            }
+        });
     });
+
+    let btnSumar = document.getElementById(`sumar${productoId}`);
+    btnSumar.addEventListener("click", ()=>{
+        let indexSumar = carrito.findIndex((productoSumar) => productoSumar.id === productoId);
+        carrito[indexSumar].cantidad += 1;
+        let cantidadRender = document.getElementById(`producto${productoId}`);
+        cantidadRender.innerText = "Cantidad: " + carrito[indexSumar].cantidad;
+        let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
+        productos[indexRecuperarStock].stock -= 1;
+        let stockRender = document.getElementById(`stock${productoId}`);
+        stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
+        localStorage.setItem("productos", JSON.stringify(productos));
+        localStorage.setItem("carrito", JSON.stringify(carrito));
     })
 }
 
-export {btnEliminar};
 export {carrito};
 

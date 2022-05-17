@@ -1,8 +1,7 @@
 //import { productos } from "./productos.js";
-import {carritoIndex } from "./carritoIndex.js";
+import {carrito, carritoIndex } from "./carritoIndex.js";
 import {getData} from "./getData.js";
-
-export const productos = await getData();
+export let productos = await getData();
 
 //const productos = [];
 
@@ -10,8 +9,6 @@ export const productos = await getData();
 //     const productosAlmacenados = JSON.parse(localStorage.getItem(localStorage.key(index)));
 //     productos.push(productosAlmacenados);
 // }
-
-
 
 const restarStock = (restaId) => {
     let productoRestado = productos.findIndex(producto => producto.id == restaId);
@@ -23,14 +20,25 @@ const restarStock = (restaId) => {
         //console.log(stockRender);
         stockRender.innerText = `Stock: ${productos[productoRestado].stock}`;
     }else{
+        productos[productoRestado].stock = productos[productoRestado].stock - 1;
         const eliminarDom = document.getElementById(`objeto${productos[productoRestado].id}`);
         eliminarDom.remove();
     }
+    
+    localStorage.setItem("productos", JSON.stringify(productos));
 }
 
-const mostrarProductos = async () => {
+const mostrarProductosBaseDatos = async () => {
+    localStorage.setItem("productos", JSON.stringify(productos));
+    productos = JSON.parse(localStorage.getItem("productos"));
+}
+
+const mostrarProductosStorage = () => {
+    productos = JSON.parse(localStorage.getItem("productos"));
+}
+
+const renderProductos = () => {
     const containerProductos = document.getElementById("container-productos");
-    console.log(productos);
     productos.forEach(producto => {
         const div = document.createElement('div');
         if (producto.stock > 0){
@@ -53,7 +61,6 @@ const mostrarProductos = async () => {
             containerProductos.appendChild(div);
 
             const boton = document.getElementById(`boton${producto.id}`);
-            console.log(boton);
             boton.addEventListener("click", ()=>{
                 restarStock(producto.id);
                 carritoIndex(producto.id);
@@ -70,4 +77,68 @@ const mostrarProductos = async () => {
     });
 }
 
-mostrarProductos();
+const mostrarCarritoExistente = () => {
+    if(localStorage.getItem("carrito")){
+        let carritoExistente = JSON.parse(localStorage.getItem("carrito"));
+        console.log(carritoExistente);
+        carritoExistente.forEach((producto)=>{
+            const divCarrito = document.createElement('div');
+            divCarrito.className = `producto${producto.id}`
+            divCarrito.innerHTML += `<p>Producto: ${producto.producto}</p>
+                                        <p>Precio unitario: ${producto.precio} $</p>
+                                        <div class="d-flex">
+                                            <p id="producto${producto.id}">
+                                                Cantidad: ${producto.cantidad}
+                                            </p>
+                                            <div class="botonera-carrito">
+                                                <button type="button" class="btn btn-success" id="restar${producto.id}">
+                                                    <img src="./src/images/cart-dash.svg" alt="restar-carrito">
+                                                </button>
+                                                <button type="button" class="btn btn-success" id="sumar${producto.id}">
+                                                    <img src="./src/images/cart-plus.svg" alt="sumar-carrito">
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="eliminar${producto.id}">
+                                                    <img src="./src/images/trash.svg" alt="papelera">
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <p id="total${producto.id}">Subtotal: ${producto.total} </p>
+                                        <hr>`;
+            modalCarrito.appendChild(divCarrito);
+            let btnEliminar = document.getElementById(`eliminar${producto.id}`);
+            btnEliminar.addEventListener("click", () =>{
+                Swal.fire({
+                    title: "Cuidado",
+                    text: "¿Eliminar producto por completo?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: "Eliminar",
+                    cancelButtonText: "Cancelar",
+                })
+                .then(resultado => {
+                    if (resultado.value) {
+                        btnEliminar.parentElement.parentElement.parentElement.remove();
+                        Swal.fire({
+                            title: 'Exito!',
+                            text: 'Usted elimino el producto del carrito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        })
+                    }
+                });
+            })
+        })
+
+    }
+}
+
+if (localStorage.getItem("productos")){
+    mostrarProductosStorage();
+}else{
+    mostrarProductosBaseDatos();
+}
+renderProductos();
+
+mostrarCarritoExistente();
