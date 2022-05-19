@@ -1,7 +1,9 @@
 //import { productos } from "./productos.js";
-import {carrito, carritoIndex } from "./carritoIndex.js";
+
 import {getData} from "./getData.js";
 export let productos = await getData();
+import {carritoIndex} from "./carritoIndex.js";
+
 
 //const productos = [];
 
@@ -37,12 +39,12 @@ const mostrarProductosStorage = () => {
     productos = JSON.parse(localStorage.getItem("productos"));
 }
 
-const renderProductos = () => {
+export const renderProductos = () => {
     const containerProductos = document.getElementById("container-productos");
     productos.forEach(producto => {
         const div = document.createElement('div');
         if (producto.stock > 0){
-            div.classList.add('col-3');
+            div.classList.add("col-3", "restartDom");
             div.setAttribute("id", `objeto${producto.id}`)
             div.innerHTML +=    `<div class="d-flex align-items-center flex-column" >
                                     <img src=${producto.img} width="250" height="250" alt="">
@@ -77,68 +79,9 @@ const renderProductos = () => {
     });
 }
 
-const mostrarCarritoExistente = () => {
-    if(localStorage.getItem("carrito")){
-        let carritoExistente = JSON.parse(localStorage.getItem("carrito"));
-        console.log(carritoExistente);
-        carritoExistente.forEach((producto)=>{
-            const divCarrito = document.createElement('div');
-            divCarrito.className = `producto${producto.id}`
-            divCarrito.innerHTML += `<p>Producto: ${producto.producto}</p>
-                                        <p>Precio unitario: ${producto.precio} $</p>
-                                        <div class="d-flex">
-                                            <p id="producto${producto.id}">
-                                                Cantidad: ${producto.cantidad}
-                                            </p>
-                                            <div class="botonera-carrito">
-                                                <button type="button" class="btn btn-success" id="restar${producto.id}">
-                                                    <img src="./src/images/cart-dash.svg" alt="restar-carrito">
-                                                </button>
-                                                <button type="button" class="btn btn-success" id="sumar${producto.id}">
-                                                    <img src="./src/images/cart-plus.svg" alt="sumar-carrito">
-                                                </button>
-                                                <button type="button" class="btn btn-danger" id="eliminar${producto.id}">
-                                                    <img src="./src/images/trash.svg" alt="papelera">
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <p id="total${producto.id}">Subtotal: ${producto.total} </p>
-                                        <hr>`;
-            modalCarrito.appendChild(divCarrito);
-            let btnEliminar = document.getElementById(`eliminar${producto.id}`);
-            btnEliminar.addEventListener("click", () =>{
-                Swal.fire({
-                    title: "Cuidado",
-                    text: "¿Eliminar producto por completo?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: "Eliminar",
-                    cancelButtonText: "Cancelar",
-                })
-                .then(resultado => {
-                    if (resultado.value) {
-                        btnEliminar.parentElement.parentElement.parentElement.remove();
-                        Swal.fire({
-                            title: 'Exito!',
-                            text: 'Usted elimino el producto del carrito',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 1500,
-                        })
-                    }
-                });
-            })
-        })
-
-    }
-}
-
 if (localStorage.getItem("productos")){
     mostrarProductosStorage();
 }else{
     mostrarProductosBaseDatos();
 }
 renderProductos();
-
-mostrarCarritoExistente();
