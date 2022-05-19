@@ -92,11 +92,12 @@ const mostrarCarritoExistente = () => {
 }
 
 const actualizarCarrito = () => {
+    localStorage.setItem("productos", JSON.stringify(productos));
+    localStorage.setItem("carrito", JSON.stringify(carrito));
     const totalCompra = document.getElementById("totalCompra");
     let sumaTotal = carrito.reduce ((acc, el) => acc + el.total, 0);
     console.log(sumaTotal);
     totalCompra.innerHTML = "Total: " + sumaTotal;
-    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
 const sumarCarrito = (productoId, indexCarrito) => {
@@ -155,35 +156,31 @@ const botonera = (productoId) => {
         }else{
             alert("No hay mas Stock")
         }
-        if (productos[indexRecuperarStock].stock === 0){
-            const eliminarDom = document.getElementById(`objeto${productos[indexRecuperarStock].id}`);
-            eliminarDom.remove();
-        }
 
-        localStorage.setItem("productos", JSON.stringify(productos));
-        localStorage.setItem("carrito", JSON.stringify(carrito));
+        actualizarCarrito();
     })
 
     let btnRestar = document.getElementById(`restar${productoId}`);
     btnRestar.addEventListener("click", ()=>{
         let indexRestar = carrito.findIndex((productoRestar) => productoRestar.id === productoId);
         let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
+        let cantidadRender = document.getElementById(`producto${productoId}`);
+        let stockRender = document.getElementById(`stock${productoId}`);
         carrito[indexRestar].cantidad -= 1;
         productos[indexRecuperarStock].stock += 1;
+        stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
 
         if(carrito[indexRestar].cantidad >= 1){
-            let cantidadRender = document.getElementById(`producto${productoId}`);
             cantidadRender.innerText = "Cantidad: " + carrito[indexRestar].cantidad;
-            let stockRender = document.getElementById(`stock${productoId}`);
-            stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
         }else{
             btnRestar.parentElement.parentElement.parentElement.remove();
             carrito.splice(indexRestar,1);
         }
 
-        localStorage.setItem("productos", JSON.stringify(productos));
-        localStorage.setItem("carrito", JSON.stringify(carrito));
+        actualizarCarrito();
     })
+
+    
 
     let btnEliminar = document.getElementById(`eliminar${productoId}`);
     btnEliminar.addEventListener("click", ()=>{
@@ -205,8 +202,7 @@ const botonera = (productoId) => {
                 carrito.splice(indexEliminar,1);
                 let stockRender = document.getElementById(`stock${productoId}`);
                 stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
-                localStorage.setItem("productos", JSON.stringify(productos));
-                localStorage.setItem("carrito", JSON.stringify(carrito));
+                actualizarCarrito();
                 Swal.fire({
                     title: 'Exito!',
                     text: 'Usted elimino el producto del carrito',

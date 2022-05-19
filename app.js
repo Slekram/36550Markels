@@ -15,16 +15,22 @@ import {carritoIndex} from "./carritoIndex.js";
 const restarStock = (restaId) => {
     let productoRestado = productos.findIndex(producto => producto.id == restaId);
     //console.log(productoRestado);
-    if(productos[productoRestado].stock>1){
+    if(productos[productoRestado].stock>0){
         productos[productoRestado].stock = productos[productoRestado].stock - 1;
         //console.log(productos[productoRestado].stock);
         const stockRender = document.getElementById(`stock${productos[productoRestado].id}`);
         //console.log(stockRender);
         stockRender.innerText = `Stock: ${productos[productoRestado].stock}`;
+        carritoIndex(restaId);
+        Swal.fire({
+            title: 'Exito!',
+            text: 'Usted agrega un producto al carrito con exito',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+        })
     }else{
-        productos[productoRestado].stock = productos[productoRestado].stock - 1;
-        const eliminarDom = document.getElementById(`objeto${productos[productoRestado].id}`);
-        eliminarDom.remove();
+        alert("El producto que usted quiere agregar no tiene stock")
     }
     
     localStorage.setItem("productos", JSON.stringify(productos));
@@ -65,15 +71,6 @@ export const renderProductos = () => {
             const boton = document.getElementById(`boton${producto.id}`);
             boton.addEventListener("click", ()=>{
                 restarStock(producto.id);
-                carritoIndex(producto.id);
-                Swal.fire({
-                    title: 'Exito!',
-                    text: 'Usted agrega un producto al carrito con exito',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500,
-                })
-
             })
         }
     });
