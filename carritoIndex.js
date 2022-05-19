@@ -86,6 +86,7 @@ const mostrarCarritoExistente = () => {
             console.log(producto.id);
             let productoId = producto.id;
             botonera(productoId);
+            actualizarCarrito();
         })
 
     }
@@ -148,10 +149,16 @@ const botonera = (productoId) => {
         console.log(indexRecuperarStock);
         if (productos[indexRecuperarStock].stock > 0){
             carrito[indexSumar].cantidad += 1;
+            carrito[indexSumar].total = carrito[indexSumar].cantidad * carrito[indexSumar].precio;
             productos[indexRecuperarStock].stock -= 1;
-            let cantidadRender = document.getElementById(`producto${productoId}`);
+
+            const totalProducto = document.getElementById(`total${productoId}`);
+            totalProducto.innerText = `Subtotal: ${carrito[indexSumar].total} $`;
+
+            const cantidadRender = document.getElementById(`producto${productoId}`);
             cantidadRender.innerText = "Cantidad: " + carrito[indexSumar].cantidad;
-            let stockRender = document.getElementById(`stock${productoId}`);
+
+            const stockRender = document.getElementById(`stock${productoId}`);
             stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
         }else{
             alert("No hay mas Stock")
@@ -164,14 +171,17 @@ const botonera = (productoId) => {
     btnRestar.addEventListener("click", ()=>{
         let indexRestar = carrito.findIndex((productoRestar) => productoRestar.id === productoId);
         let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
-        let cantidadRender = document.getElementById(`producto${productoId}`);
-        let stockRender = document.getElementById(`stock${productoId}`);
+        const totalProducto = document.getElementById(`total${productoId}`);
+        const cantidadRender = document.getElementById(`producto${productoId}`);
+        const stockRender = document.getElementById(`stock${productoId}`);
         carrito[indexRestar].cantidad -= 1;
+        carrito[indexRestar].total = carrito[indexRestar].cantidad * carrito[indexRestar].precio;
         productos[indexRecuperarStock].stock += 1;
         stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
 
         if(carrito[indexRestar].cantidad >= 1){
             cantidadRender.innerText = "Cantidad: " + carrito[indexRestar].cantidad;
+            totalProducto.innerText = `Subtotal: ${carrito[indexRestar].total} $`;
         }else{
             btnRestar.parentElement.parentElement.parentElement.remove();
             carrito.splice(indexRestar,1);
