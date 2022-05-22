@@ -30,6 +30,38 @@
         "precio": 45000,
         "stock": 15,
         "img": "./src/images/3500.webp"
+    },
+    {
+        "id":5,
+        "nombre": "Filamento PLA impresora 3D 1 kilo",
+        "marca": "Print a lot",
+        "precio": 1500,
+        "stock": 10,
+        "img": "./src/images/filamento.jpg"
+    },
+    {
+        "id":6,
+        "nombre": "Panel led Horticultura",
+        "marca": "Samsung",
+        "precio": 80000,
+        "stock": 5,
+        "img": "./src/images/panel.jpg"
+    },
+    {
+        "id":7,
+        "nombre": "Teclado mecanico",
+        "marca": "Red Dragon",
+        "precio": 10000,
+        "stock": 3,
+        "img": "./src/images/teclado.jpg"
+    },
+    {
+        "id":8,
+        "nombre": "Arduino Uno",
+        "marca": "Arduino",
+        "precio": 1000,
+        "stock": 10,
+        "img": "./src/images/arduino.svg"
     }
 ]
 

@@ -1,25 +1,12 @@
-//import { productos } from "./productos.js";
-
 import {getData} from "./getData.js";
 export let productos = await getData();
 import {carritoIndex} from "./carritoIndex.js";
 
-
-//const productos = [];
-
-// for (let index = 0; index < localStorage.length; index++) {
-//     const productosAlmacenados = JSON.parse(localStorage.getItem(localStorage.key(index)));
-//     productos.push(productosAlmacenados);
-// }
-
 const restarStock = (restaId) => {
     let productoRestado = productos.findIndex(producto => producto.id == restaId);
-    //console.log(productoRestado);
     if(productos[productoRestado].stock>0){
         productos[productoRestado].stock = productos[productoRestado].stock - 1;
-        //console.log(productos[productoRestado].stock);
         const stockRender = document.getElementById(`stock${productos[productoRestado].id}`);
-        //console.log(stockRender);
         stockRender.innerText = `Stock: ${productos[productoRestado].stock}`;
         carritoIndex(restaId);
         Swal.fire({
@@ -30,27 +17,28 @@ const restarStock = (restaId) => {
             timer: 1500,
         })
     }else{
-        alert("El producto que usted quiere agregar no tiene stock")
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'El producto que usted quiere agregar no tiene stock',
+        })
     }
-    
+
     localStorage.setItem("productos", JSON.stringify(productos));
 }
 
 const mostrarProductosBaseDatos = async () => {
     localStorage.setItem("productos", JSON.stringify(productos));
-    productos = JSON.parse(localStorage.getItem("productos"));
-}
-
-const mostrarProductosStorage = () => {
-    productos = JSON.parse(localStorage.getItem("productos"));
+    renderProductos();
 }
 
 export const renderProductos = () => {
+    productos = JSON.parse(localStorage.getItem("productos"));
     const containerProductos = document.getElementById("container-productos");
     productos.forEach(producto => {
         const div = document.createElement('div');
-        if (producto.stock > 0){
-            div.classList.add("col-3", "restartDom");
+        if (producto.stock >= 0){
+            div.classList.add("col-3");
             div.setAttribute("id", `objeto${producto.id}`)
             div.innerHTML +=    `<div class="d-flex align-items-center flex-column" >
                                     <img src=${producto.img} width="250" height="250" alt="">
@@ -69,16 +57,13 @@ export const renderProductos = () => {
             containerProductos.appendChild(div);
 
             const boton = document.getElementById(`boton${producto.id}`);
-            boton.addEventListener("click", ()=>{
-                restarStock(producto.id);
-            })
+            boton.addEventListener("click", ()=> restarStock(producto.id))
         }
     });
 }
 
 if (localStorage.getItem("productos")){
-    mostrarProductosStorage();
+    renderProductos();
 }else{
     mostrarProductosBaseDatos();
 }
-renderProductos();
