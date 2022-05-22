@@ -1,8 +1,10 @@
 import { productos } from "./app.js";
 
 let carrito = [];
+let sumaTotal;
 const modalCarrito = document.getElementById("modalCarrito");
 const totalCompra = document.getElementById("totalCompra");
+const textoModal = document.getElementById("textoModal");
 
 class ObjetoCarrito {
     constructor (obj){
@@ -38,10 +40,9 @@ const comprobacionCarrito = (productoId) => {
 
 const btnComprar = document.getElementById("btnComprar");
 btnComprar.addEventListener("click", () => {
-    const modalCarrito = document.getElementById("modalCarrito");
     if (carrito.length>=1) {
         Swal.fire({
-            title: "¿Usted esta seguro que quiere llevar todo lo que puso en el carrito?",
+            title: `¿Usted esta seguro que quiere llevar todo lo que puso en el carrito por un total de ${sumaTotal}$?`,
             text: `En este momento solo estamos aceptando pago en efectivo al momento de recibir la compra en el hogar. `,
             icon: 'warning',
             showCancelButton: true,
@@ -51,7 +52,7 @@ btnComprar.addEventListener("click", () => {
         .then(resultado => {
             if (resultado.value) {
                 carrito.splice(0,carrito.length);
-                localStorage.setItem("carrito", JSON.stringify(carrito));
+                localStorage.removeItem("carrito");
                 modalCarrito.innerHTML = `<p id="textoModal">El carrito se encuentra vacio</p>`;
                 totalCompra.innerHTML = "Total: " + 0 + "$";
                 Swal.fire({
@@ -75,9 +76,14 @@ btnComprar.addEventListener("click", () => {
 } )
 
 export const actualizarCarrito = () => {
+    if (carrito.length<1){
+        localStorage.removeItem("carrito");
+        modalCarrito.innerHTML = `<p id="textoModal">El carrito se encuentra vacio</p>`;
+    }else{
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
     localStorage.setItem("productos", JSON.stringify(productos));
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    let sumaTotal = carrito.reduce ((acc, el) => acc + el.total, 0);
+    sumaTotal = carrito.reduce ((acc, el) => acc + el.total, 0);
     totalCompra.innerHTML = "Total: " + sumaTotal + "$";
 }
 
@@ -91,11 +97,10 @@ const sumarCarrito = (productoId, indexCarrito) => {
 }
 
 const renderCarrito = (productoId, indexCarrito2) => {
-    const modalCarrito = document.getElementById("modalCarrito");
-    const textoModal = document.getElementById("textoModal");
-    if(textoModal.innerText= ""){
+    if (localStorage.getItem("carrito")){
+
     }else{
-        textoModal.innerText= "";
+        modalCarrito.innerHTML = `<p id="textoModal"></p>`;
     }
     const divCarrito = document.createElement('div');
     divCarrito.classList = `producto${productoId}`
@@ -127,7 +132,11 @@ const renderCarrito = (productoId, indexCarrito2) => {
 }
 
 export const botonera = (productoId) => {
-    let btnSumar = document.getElementById(`sumar${productoId}`);
+    const cantidadRender = document.getElementById(`producto${productoId}`);
+    const totalProducto = document.getElementById(`total${productoId}`);
+    const stockRender = document.getElementById(`stock${productoId}`);
+    
+    const btnSumar = document.getElementById(`sumar${productoId}`);
     btnSumar.addEventListener("click", ()=>{
         let indexSumar = carrito.findIndex((productoSumar) => productoSumar.id === productoId);
         let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
@@ -136,13 +145,8 @@ export const botonera = (productoId) => {
             carrito[indexSumar].total = carrito[indexSumar].cantidad * carrito[indexSumar].precio;
             productos[indexRecuperarStock].stock --;
 
-            const totalProducto = document.getElementById(`total${productoId}`);
             totalProducto.innerText = `Subtotal: ${carrito[indexSumar].total}$`;
-
-            const cantidadRender = document.getElementById(`producto${productoId}`);
             cantidadRender.innerText = "Cantidad: " + carrito[indexSumar].cantidad;
-
-            const stockRender = document.getElementById(`stock${productoId}`);
             stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
         }else{
             Swal.fire({
@@ -155,13 +159,10 @@ export const botonera = (productoId) => {
         actualizarCarrito();
     })
 
-    let btnRestar = document.getElementById(`restar${productoId}`);
+    const btnRestar = document.getElementById(`restar${productoId}`);
     btnRestar.addEventListener("click", ()=>{
         let indexRestar = carrito.findIndex((productoRestar) => productoRestar.id === productoId);
         let indexRecuperarStock = productos.findIndex((productoRecuperarStock)=> productoRecuperarStock.id === productoId);
-        const totalProducto = document.getElementById(`total${productoId}`);
-        const cantidadRender = document.getElementById(`producto${productoId}`);
-        const stockRender = document.getElementById(`stock${productoId}`);
         carrito[indexRestar].cantidad --;
         carrito[indexRestar].total = carrito[indexRestar].cantidad * carrito[indexRestar].precio;
         productos[indexRecuperarStock].stock ++;
@@ -178,7 +179,7 @@ export const botonera = (productoId) => {
         actualizarCarrito();
     })
 
-    let btnEliminar = document.getElementById(`eliminar${productoId}`);
+    const btnEliminar = document.getElementById(`eliminar${productoId}`);
     btnEliminar.addEventListener("click", ()=>{
         Swal.fire({
             title: "Cuidado",
@@ -196,7 +197,6 @@ export const botonera = (productoId) => {
                 let recuperadorStock = carrito[indexEliminar].cantidad;
                 productos[indexRecuperarStock].stock = productos[indexRecuperarStock].stock + recuperadorStock;
                 carrito.splice(indexEliminar,1);
-                let stockRender = document.getElementById(`stock${productoId}`);
                 stockRender.innerText = "Stock: " + productos[indexRecuperarStock].stock;
                 actualizarCarrito();
                 Swal.fire({
@@ -213,11 +213,7 @@ export const botonera = (productoId) => {
 
 const mostrarCarritoExistente = () => {
     if(localStorage.getItem("carrito")){
-        const textoModal = document.getElementById("textoModal");
-        if(textoModal.innerText= ""){
-        }else{
-            textoModal.innerText= "";
-        }
+        textoModal.innerText= "";
         carrito = JSON.parse(localStorage.getItem("carrito"));
         carrito.forEach((producto)=>{
             const divCarrito = document.createElement('div');
@@ -251,6 +247,8 @@ const mostrarCarritoExistente = () => {
             actualizarCarrito();
         })
 
+    }else{
+        totalCompra.innerHTML = "Total: " + 0 + "$";
     }
 }
 
